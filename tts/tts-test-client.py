@@ -5,11 +5,15 @@ import sounddevice as sd
 import requests
 import numpy as np
 
+
 def parse_content_type(content_type: str) -> dict:
     content_type_base, *params = content_type.split(';')
     params = dict(map(lambda x: x.split('='), params))
     if content_type_base == 'audio/pcm':
-        return {'samplerate': int(params['rate']), 'dtype': np.dtype(f"{params['encoding']}{params['bits']}")}
+        return {
+            'samplerate': int(params['rate']),
+            'dtype': np.dtype(f"{params['encoding']}{params['bits']}") if 'encoding' in params and 'bits' in params else np.int16,
+        }
     raise ValueError(f'Invalid content type: {content_type}')
 
 
