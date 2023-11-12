@@ -1,0 +1,6 @@
+torch
+TTS
+numpy
+flask
+sounddevice
+requests
