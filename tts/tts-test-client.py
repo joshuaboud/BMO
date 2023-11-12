@@ -49,7 +49,7 @@ def main():
     parser.add_argument('-H', '--host', type=str, required=False, default='127.0.0.1', metavar='HOST', help="Server host")
     parser.add_argument('-p', '--port', type=int, required=True, metavar='PORT', help="Server port number")
     parser.add_argument('-w', '--output-wav', type=str, required=False, default=None, dest='output_wav_path', metavar='PATH.wav', help="Save output to .wav instead of playing")
-    parser.add_argument('text', type=str, action='append', metavar='TEXT', help="Text to send")
+    parser.add_argument('text', type=str, nargs='*', metavar='TEXT', help="Text to send")
     args = parser.parse_args()
     input_text = ' '.join(args.text)
     if args.output_wav_path is not None:
