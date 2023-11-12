@@ -44,16 +44,35 @@ def save_wav(text: str, host: str, port: int, file_path: str) -> None:
         wv.write(pcm)
 
 
+def interactive(host: str, port: int) -> None:
+    print("Entering interactive mode...")
+    print("Type any text and press <enter> to hear BMO say it!")
+    print("Type 'exit' or 'quit' to leave")
+    while True:
+        input_text = input('> ')
+        if input_text.upper() in ['QUIT', 'EXIT']:
+            print("Goodbye")
+            return
+        say(input_text, host, port)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-H', '--host', type=str, required=False, default='127.0.0.1', metavar='HOST', help="Server host")
     parser.add_argument('-p', '--port', type=int, required=True, metavar='PORT', help="Server port number")
     parser.add_argument('-w', '--output-wav', type=str, required=False, default=None, dest='output_wav_path', metavar='PATH.wav', help="Save output to .wav instead of playing")
     parser.add_argument('text', type=str, nargs='*', metavar='TEXT', help="Text to send")
+    parser.add_argument('-i', '--interactive', action="store_true", help="Enter interactive prompt")
     args = parser.parse_args()
+
+    if args.interactive:
+        return interactive(args.host, args.port)
+    
     input_text = ' '.join(args.text)
+    
     if args.output_wav_path is not None:
         return save_wav(input_text, args.host, args.port, args.output_wav_path)
+    
     say(input_text, args.host, args.port)
 
 if __name__ == "__main__":
