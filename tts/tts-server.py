@@ -4,7 +4,7 @@ import torch
 from TTS.api import TTS
 import numpy as np
 from typing import List, Tuple
-from flask import Flask, redirect, url_for, request, Response
+from flask import Flask, redirect, url_for, request, Response, render_template
 import argparse
 
 
@@ -40,15 +40,19 @@ def synthesize(text: str) -> np.ndarray:
     return audio
 
 
-
 tts = init_tts()
 
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/", methods=["GET", "POST"])
 def index():
-   return "Hello, world! This is BMO's voice box. POST to /api/v1/synthesize to get audio."
+    if request.method == "POST":
+        input_text = request.form["text"]
+        pcm = synthesize(input_text)
+        pcm_bytes = pcm.tobytes()
+        return Response(pcm_bytes, content_type=f'audio/pcm;rate={tts.synthesizer.output_sample_rate};encoding=float;bits=32')
+    return render_template("index.html")
 
 
 @app.route('/api/v1/synthesize', methods=['POST'])
@@ -70,7 +74,7 @@ def api_synthesize():
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('port', type=int, metavar='PORT', help="Server port number")
+    parser.add_argument('-port', '--port', type=int, required=False, default=80, metavar='PORT', help="Server port number (default 80)")
     args = parser.parse_args()
     app.run(debug=True, port=args.port)
 
