@@ -76,7 +76,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-port', '--port', type=int, required=False, default=80, metavar='PORT', help="Server port number (default 80)")
     args = parser.parse_args()
-    app.run(debug=True, port=args.port)
+    app.run(debug=True, host='0.0.0.0', port=args.port)
 
 
 if __name__ == '__main__':
