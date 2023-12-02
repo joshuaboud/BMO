@@ -6,14 +6,19 @@ import numpy as np
 from typing import List, Tuple
 from flask import Flask, redirect, url_for, request, Response, render_template
 import argparse
+import os
+from pathlib import Path
 
 
 def init_tts() -> TTS:
     # Get device
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f'TTS device: {device} (cpu|gpu)')
+    print(f'TTS device: {device} (cpu|cuda)')
     # Init TTS
-    tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False).to(device)
+    model_path = os.getenv('TTS_MODEL_PATH')
+    if model_path is None:
+        model_path = Path.home() / '.local/share/tts'
+    tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False, model_path=model_path).to(device)
     return tts
 
 
