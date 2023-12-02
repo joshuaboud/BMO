@@ -15,11 +15,7 @@ def init_tts() -> TTS:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f'TTS device: {device} (cpu|cuda)')
     # Init TTS
-    model_path = os.getenv('TTS_MODEL_PATH')
-    if model_path is None:
-        model_path = str(Path.home() / '.local/share/tts')
-    print("Model path:", model_path)
-    tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False, model_path=model_path).to(device)
+    tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False).to(device)
     return tts
 
 
