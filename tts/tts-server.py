@@ -17,7 +17,7 @@ def init_tts() -> TTS:
     # Init TTS
     model_path = os.getenv('TTS_MODEL_PATH')
     if model_path is None:
-        model_path = Path.home() / '.local/share/tts'
+        model_path = str(Path.home() / '.local/share/tts')
     tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False, model_path=model_path).to(device)
     return tts
 
