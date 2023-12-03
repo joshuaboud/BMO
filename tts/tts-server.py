@@ -57,7 +57,8 @@ def synthesize(text: str) -> np.ndarray:
             voice_dir='clone_srcs/',
             speaker='bmo_if_i_was_grown',
             # speaker_wav=["clone_srcs/bmo_best_of.wav", "clone_srcs/bmo_if_i_was_grown.wav", "clone_srcs/bmo_i_am_a_little_living_boy.wav"],
-            language="en"), dtype='float32')
+            # language="en"
+            ), dtype='float32')
     return audio
 
 
