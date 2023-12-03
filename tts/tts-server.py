@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import torch
-from TTS.api import TTS
 import numpy as np
 from typing import List, Tuple
 from flask import Flask, redirect, url_for, request, Response, render_template
@@ -9,13 +8,31 @@ import argparse
 import os
 from pathlib import Path
 
+from TTS.api import TTS
+# from TTS.tts.configs.bark_config import BarkConfig
+# from TTS.tts.models.bark import Bark
+
+# model_dir = os.environ['TTS_MODEL_DIR']
+# if not Path(model_dir).is_dir():
+#     raise ValueError(f"Error: {model_dir}: not a directory")
+
+# config = BarkConfig(
+
+# )
+# model = Bark.init_from_config(config)
+# model.load_checkpoint(config, checkpoint_dir=model_dir, eval=True)
+
+# # cloning a speaker.
+# # It assumes that you have a speaker file in `bark_voices/speaker_n/speaker.wav` or `bark_voices/speaker_n/speaker.npz`
+# output_dict = model.synthesize(text, config, speaker_id="bmo_if_i_was_grown", voice_dirs="clone_srcs/")
+
 
 def init_tts() -> TTS:
     # Get device
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f'TTS device: {device} (cpu|cuda)')
     # Init TTS
-    tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2", progress_bar=False).to(device)
+    tts = TTS("tts_models/multilingual/multi-dataset/bark", gpu=True, progress_bar=False).to(device)
     return tts
 
 
@@ -37,7 +54,9 @@ def synthesize(text: str) -> np.ndarray:
     audio = np.array(
         tts.tts(
             text=text,
-            speaker_wav=["clone_srcs/bmo_best_of.wav", "clone_srcs/bmo_if_i_was_grown.wav", "clone_srcs/bmo_i_am_a_little_living_boy.wav"],
+            voice_dir='clone_srcs/',
+            speaker='bmo_if_i_was_grown',
+            # speaker_wav=["clone_srcs/bmo_best_of.wav", "clone_srcs/bmo_if_i_was_grown.wav", "clone_srcs/bmo_i_am_a_little_living_boy.wav"],
             language="en"), dtype='float32')
     return audio
 
