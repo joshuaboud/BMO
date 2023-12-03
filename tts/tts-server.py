@@ -32,7 +32,7 @@ def init_tts() -> TTS:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f'TTS device: {device} (cpu|cuda)')
     # Init TTS
-    tts = TTS("tts_models/multilingual/multi-dataset/bark", gpu=True, progress_bar=False).to(device)
+    tts = TTS("tts_models/multilingual/multi-dataset/bark", progress_bar=False).to(device)
     return tts
 
 
@@ -98,7 +98,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-port', '--port', type=int, required=False, default=80, metavar='PORT', help="Server port number (default 80)")
     args = parser.parse_args()
-    app.run(debug=True, host='0.0.0.0', port=args.port)
+    app.run(debug=False, host='0.0.0.0', port=args.port)
 
 
 if __name__ == '__main__':
